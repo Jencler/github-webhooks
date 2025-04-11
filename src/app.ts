@@ -1,6 +1,7 @@
 import express, { json } from 'express'
 import { envs } from './config/envs';
 import { GithubController } from './presentation/github/controller';
+import { GitHubSha256Middleware } from './presentation/middlewares/github-sha256.middleware';
 
 
 (() => {
@@ -9,7 +10,10 @@ import { GithubController } from './presentation/github/controller';
 
 function main() {
     const app = express();
+    
     app.use(json())
+    app.use(GitHubSha256Middleware.verifyGitHubSignature)
+
     const controller = new GithubController()
 
     app.get("/", (req, res) => {
